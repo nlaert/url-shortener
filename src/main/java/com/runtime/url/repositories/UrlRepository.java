@@ -7,8 +7,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface UrlRepository extends JpaRepository<UrlEntity, String> {
+public interface UrlRepository extends JpaRepository<UrlEntity, Long> {
 
     @Query("select u from UrlEntity u where u.shortenUrl = :shortenUrl ")
     Optional<UrlEntity> findByShortUrl(@Param("shortenUrl") String shortenUrl);
+
+    boolean existsByShortenUrl(String shortenUrl);
 }

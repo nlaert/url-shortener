@@ -21,9 +21,7 @@ public class UrlServiceImpl implements UrlService {
     public String shortenUrl(String originalUrl) {
         UrlEntity url = new UrlEntity();
         url.setOriginalUrl(originalUrl);
-        url.setShortenUrl(RandomStringUtils.randomAlphanumeric(7));
-
-        //TODO: validate or catch error when repeated shortenUrl
+        url.setShortenUrl(generateNewShortenUrl());
         urlRepository.save(url);
         return url.getShortenUrl();
     }
@@ -33,6 +31,18 @@ public class UrlServiceImpl implements UrlService {
         return urlRepository.findByShortUrl(shortenUrl)
                 .map(UrlEntity::getOriginalUrl)
                 .orElseThrow(() -> new UrlNotFoundException(shortenUrl));
+    }
 
+    /**
+     * Generates a random alphanumeric string and checks if it exists in DB.
+     * If it does, tries again until a non existing string is generated.
+     * @return a random alphanumeric string.
+     */
+    private String generateNewShortenUrl() {
+        String randomString;
+        do {
+            randomString = RandomStringUtils.randomAlphanumeric(7);
+        } while(urlRepository.existsByShortenUrl(randomString));
+        return randomString;
     }
 }
