@@ -1,0 +1,11 @@
+.list-group-item {
+    justify-content: space-between
+}
+
+.original-url {
+    align-self: flex-start;
+}
+
+.shorten-url {
+    align-self: flex-end;
+}
