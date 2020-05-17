@@ -2,6 +2,9 @@ package com.runtime.url.controllers;
 
 import com.runtime.url.dto.UrlDto;
 import com.runtime.url.services.UrlService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,10 @@ public class UrlController {
      * @param request helper object to be able to get the hostname in order to build the complete url.
      * @return {@link UrlDto} with both the original and the shorten Url filled.
      */
+    @ApiOperation(value = "Saves the given original url on the DB and returns an shorten url that will redirect to the original url.", response = UrlDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful operation", response = UrlDto.class),
+            @ApiResponse(code = 400, message = "Bad Request")})
     @PostMapping("/shorten")
     public ResponseEntity<UrlDto> shortenUrl(@RequestBody UrlDto url, HttpServletRequest request) {
         String shortenUrl = urlService.shortenUrl(url.getOriginalUrl());
@@ -46,6 +53,12 @@ public class UrlController {
      * @param shortenUrl the shorten url to search for an original url.
      * @return HttpStatus.FOUND with Location to the original url or HttpStatus.NOT_FOUND if not found.
      */
+    @ApiOperation(value = "Redirects the call to the original url.",
+            notes = "The \"1\" before the path variable is a way to differentiate this controller mapping from the index.html. \n" +
+                    "Calling this from swagger-ui might not work correctly due to the redirect.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 302, message = "Redirects to original url"),
+            @ApiResponse(code = 404, message = "Not Found")})
     @GetMapping("/1{shortenUrl}")
     public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortenUrl) {
         String originalUrl = urlService.getOriginalUrl(shortenUrl);
