@@ -1,6 +1,6 @@
 package com.runtime.url.services;
 
-import com.runtime.url.UrlNotFoundException;
+import com.runtime.url.exceptions.UrlNotFoundException;
 import com.runtime.url.model.UrlEntity;
 import com.runtime.url.repositories.UrlRepository;
 import org.junit.jupiter.api.Assertions;

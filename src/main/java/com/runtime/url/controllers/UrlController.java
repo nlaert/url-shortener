@@ -2,7 +2,6 @@ package com.runtime.url.controllers;
 
 import com.runtime.url.dto.UrlDto;
 import com.runtime.url.services.UrlService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +30,7 @@ public class UrlController {
      * @param request helper object to be able to get the hostname in order to build the complete url.
      * @return {@link UrlDto} with both the original and the shorten Url filled.
      */
-    @PostMapping("shorten")
+    @PostMapping("/shorten")
     public ResponseEntity<UrlDto> shortenUrl(@RequestBody UrlDto url, HttpServletRequest request) {
         String shortenUrl = urlService.shortenUrl(url.getOriginalUrl());
         StringBuffer hostUrl = request.getRequestURL();
@@ -51,12 +48,7 @@ public class UrlController {
      */
     @GetMapping("/1{shortenUrl}")
     public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortenUrl) {
-        String originalUrl = null;
-        try {
-            originalUrl = urlService.getOriginalUrl(shortenUrl);
-        } catch (Exception ex) {
-            ResponseEntity.notFound();
-        }
+        String originalUrl = urlService.getOriginalUrl(shortenUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.LOCATION, originalUrl);
         return new ResponseEntity<>(headers, HttpStatus.FOUND);

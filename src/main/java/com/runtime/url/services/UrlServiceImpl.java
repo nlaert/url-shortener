@@ -1,11 +1,14 @@
 package com.runtime.url.services;
 
-import com.runtime.url.UrlNotFoundException;
+import com.runtime.url.exceptions.UrlNotFoundException;
 import com.runtime.url.model.UrlEntity;
 import com.runtime.url.repositories.UrlRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.security.InvalidParameterException;
 
 @Service
 public class UrlServiceImpl implements UrlService {
@@ -19,6 +22,9 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public String shortenUrl(String originalUrl) {
+        if (StringUtils.isEmpty(originalUrl)) {
+            throw new InvalidParameterException("originalUrl can't be null");
+        }
         UrlEntity url = new UrlEntity();
         url.setOriginalUrl(originalUrl);
         url.setShortenUrl(generateNewShortenUrl());

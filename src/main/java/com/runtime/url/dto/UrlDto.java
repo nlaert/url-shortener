@@ -6,6 +6,9 @@ public class UrlDto {
     private String originalUrl;
     private String shortenUrl;
 
+    public UrlDto() {
+    }
+
     public String getOriginalUrl() {
         return originalUrl;
     }
