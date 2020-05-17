@@ -1,8 +1,9 @@
-const newUrl = "<a href=\"URL\" class=\"list-group-item list-group-item-action\">URL</a>"
+const newUrl = "<a href=\"URL\" class=\"list-group-item list-group-item-action active\" target=\"_blank\">URL</a>"
 
 function shortenUrl() {
     let originalUrl = document.getElementById('originalUrl');
-    if (originalUrl) {
+    if (!!originalUrl.value) {
+        document.getElementById('alert').style.display = 'none';
         let dto = {originalUrl: originalUrl.value};
         fetch('/shorten', {
             method: 'POST',
@@ -13,8 +14,11 @@ function shortenUrl() {
         }).then(response => response.json())
             .then(function (response) {
                 if (response.shortenUrl) {
-                    document.getElementById('shortenUrls').innerHTML = newUrl.replace(/URL/g, response.shortenUrl);
+                    let innerHTML = document.getElementById('shortenUrls').innerHTML.replace('active', '');
+                    document.getElementById('shortenUrls').innerHTML = newUrl.replace(/URL/g, response.shortenUrl) + innerHTML;
                 }
         });
+    } else {
+        document.getElementById('alert').style.display = 'inherit';
     }
 }
